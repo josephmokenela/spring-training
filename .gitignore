@@ -7,16 +7,16 @@
 # Ignore bundler config.
 /.classpath
 
-# Ignore Idea specific files
+# Ignore the target files generated from maven
 target/
 
-# Ignore Idea specific files
+# Ignore bin files
 bin/
 
-# Ignore Idea specific files
+# Ignore the settings files
 .settings/
 
-# Ignore the Aptana/Eclipse specific files
+# Ignore the Eclipse specific files
 .project
 
 # Ignore the default SQLite database.
