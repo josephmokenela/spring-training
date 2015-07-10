@@ -1,3 +1,3 @@
 <%@include file="includes/header.jsp" %>
-     Hello tere
+     <spring:message code="hello" />
  <%@include file="includes/footer.jsp" %>
