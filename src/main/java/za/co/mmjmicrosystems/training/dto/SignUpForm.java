@@ -8,7 +8,7 @@ public class SignUpForm {
 	
 	@NotNull
 	@Size(min=1, max=255)
-	@Pattern(regexp = "[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}", message = "{emailPatternError}")
+	@Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "{emailPatternError}")
 	private String email;
 	
 	@NotNull
