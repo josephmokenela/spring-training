@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import za.co.mmjmicrosystems.training.dto.SignUpForm;
+import za.co.mmjmicrosystems.training.services.UserService;
 
 
 @Controller
@@ -19,6 +21,14 @@ public class HomeController {
 	
 	private static final Log log = LogFactory.getLog(HomeController.class);
 	
+	private UserService userService;
+	
+	@Autowired
+	public HomeController(UserService userService) {
+		super();
+		this.userService = userService;
+	}
+
 	@RequestMapping("/")
 	public String home() {
 		
@@ -46,7 +56,7 @@ public class HomeController {
 		log.info("Email: " + signUpForm.getEmail());
 		log.info("Password: " + signUpForm.getPassword());
 		
-		//userService.signup(signUpForm);
+		userService.signup(signUpForm);
 		
 		return "redirect:/";
 	}
