@@ -42,6 +42,10 @@ public class HomeController {
 			return "signup";
 		}
 		
+		log.info("Name: " + signUpForm.getName());
+		log.info("Email: " + signUpForm.getEmail());
+		log.info("Password: " + signUpForm.getPassword());
+		
 		//userService.signup(signUpForm);
 		
 		return "redirect:/";
