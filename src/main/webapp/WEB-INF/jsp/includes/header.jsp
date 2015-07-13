@@ -57,6 +57,15 @@
 		      </form>
 		      <ul class="nav navbar-nav navbar-right">
 		        <li><a href="<c:url value='/signup' />"><span class="glyphicon glyphicon-list-alt"></span> Sign Up</a></li> <!--  This is the alternative to hardcoding the link -->
+		        <li>
+                  <a href="/login">Sign in <span class="glyphicon glyphicon-log-in"></span></a>
+            	</li>
+            	<li>
+	            	<c:url var="logoutUrl" value="/logout" />
+	        		<form:form	id="logoutForm" action="${logoutUrl}" method="post">
+					</form:form>
+					<a href="#" onclick="document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-log-out"></span> Sign out</a>
+            	</li>
 		        <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
 		          <ul class="dropdown-menu">

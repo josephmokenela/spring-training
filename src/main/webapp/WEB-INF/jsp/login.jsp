@@ -1,5 +1,6 @@
 <%@include file="includes/header.jsp" %>
-     <div class="panel panel-primary">
+
+ <div class="panel panel-primary">
 
 	<div class="panel-heading">
 		<h3 class="panel-title">Please sign in</h3>
@@ -38,4 +39,5 @@
 		</form:form>
 	</div>
 </div>
+
  <%@include file="includes/footer.jsp" %>
