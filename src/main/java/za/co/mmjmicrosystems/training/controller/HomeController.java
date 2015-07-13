@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import za.co.mmjmicrosystems.training.dto.SignUpForm;
 import za.co.mmjmicrosystems.training.services.UserService;
@@ -46,13 +47,17 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/signup", method=RequestMethod.POST)
-	public String signup(@ModelAttribute("signupform") @Valid SignUpForm signUpForm, BindingResult result) {
+	public String signup(@ModelAttribute("signupform") @Valid SignUpForm signUpForm, BindingResult result,
+			RedirectAttributes redirectAttributes) {
 		
 		if (result.hasErrors()) {
 			return "signup";
 		}
 		
 		userService.signup(signUpForm);
+		
+		redirectAttributes.addFlashAttribute("flashKind", "success");
+		redirectAttributes.addFlashAttribute("flashMessage", "Signup successfull, Please check your inbox to verify your account");
 		
 		return "redirect:/";
 	}
