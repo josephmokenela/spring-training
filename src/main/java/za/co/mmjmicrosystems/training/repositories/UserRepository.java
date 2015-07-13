@@ -7,5 +7,7 @@ import za.co.mmjmicrosystems.training.entities.User;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
+	
+	User findByEmail(String email);
 
 }
