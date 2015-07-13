@@ -2,11 +2,15 @@ package za.co.mmjmicrosystems.training.services.impl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import za.co.mmjmicrosystems.training.dto.SignUpForm;
+import za.co.mmjmicrosystems.training.dto.UserDetailsImpl;
 import za.co.mmjmicrosystems.training.entities.User;
 import za.co.mmjmicrosystems.training.repositories.UserRepository;
 import za.co.mmjmicrosystems.training.services.UserService;
@@ -15,7 +19,7 @@ import za.co.mmjmicrosystems.training.services.UserService;
 
 @Service
 @Transactional(propagation=Propagation.SUPPORTS, readOnly=true)
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 	
 	private UserRepository userRepository;
 	
@@ -35,6 +39,20 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(signUpForm.getPassword());
 		userRepository.save(user);
 		
+	}
+
+
+
+	@Override
+	public UserDetails loadUserByUsername(String email)
+			throws UsernameNotFoundException {
+		User user = userRepository.findByEmail(email);
+		
+		if (user == null) {
+			throw new UsernameNotFoundException(email);
+		}
+		
+		return new UserDetailsImpl(user);
 	}
 
 }
