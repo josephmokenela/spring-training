@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import za.co.mmjmicrosystems.training.dto.SignUpForm;
 import za.co.mmjmicrosystems.training.services.UserService;
+import za.co.mmjmicrosystems.training.util.FlashUtils;
 
 
 @Controller
@@ -56,8 +57,7 @@ public class HomeController {
 		
 		userService.signup(signUpForm);
 		
-		redirectAttributes.addFlashAttribute("flashKind", "success");
-		redirectAttributes.addFlashAttribute("flashMessage", "Signup successfull, Please check your inbox to verify your account");
+		FlashUtils.flash(redirectAttributes, "success", "signupSuccess");
 		
 		return "redirect:/";
 	}
