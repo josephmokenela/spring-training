@@ -26,7 +26,7 @@
       		</div>
       		
       		<div class="form-group">
-      			<form:label path="password">Email Address</form:label>
+      			<form:label path="password">Password</form:label>
       			<form:password path="password" class="form-control" placeholder="Password"/>
       			<form:errors cssClass="error" path="password" />
       			<p class="help-block">Enter your unique password</p>
