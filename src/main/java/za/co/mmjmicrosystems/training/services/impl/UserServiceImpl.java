@@ -1,6 +1,7 @@
 package za.co.mmjmicrosystems.training.services.impl;
 
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.mmjmicrosystems.training.dto.SignUpForm;
 import za.co.mmjmicrosystems.training.dto.UserDetailsImpl;
 import za.co.mmjmicrosystems.training.entities.User;
+import za.co.mmjmicrosystems.training.entities.User.Role;
 import za.co.mmjmicrosystems.training.repositories.UserRepository;
 import za.co.mmjmicrosystems.training.services.UserService;
 
@@ -40,6 +42,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setEmail(signUpForm.getEmail());
 		user.setName(signUpForm.getName());
 		user.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+		user.getRoles().add(Role.UNVERIFIED);
+		user.setVerificationCode(RandomStringUtils.randomAlphanumeric(16));
 		userRepository.save(user);
 		
 	}

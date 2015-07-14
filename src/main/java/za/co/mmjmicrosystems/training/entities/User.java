@@ -1,7 +1,12 @@
 package za.co.mmjmicrosystems.training.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +22,10 @@ public class User {
 	public static final int EMAIL_MAX = 250;
 	public static final int NAME_MAX = 50;
 	
+	public static enum Role {
+		UNVERIFIED, BLOCKED, ADMIN
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -29,8 +38,12 @@ public class User {
 	
 	@Column(nullable = false)
 	private String password;
-
 	
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<Role> roles = new HashSet<Role>();	
+	
+	@Column(length = 16)
+	private String verificationCode;
 	
 	public Long getId() {
 		return id;
@@ -62,6 +75,22 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
 	}
 	
 	
