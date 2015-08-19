@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,19 +25,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private static final Log log = LogFactory.getLog(WebSecurityConfig.class);
 	
-	@Value("${rememberMe.privateKey}")
 	private String rememberMeKey;
 	
-	
+
 	@Resource
 	private UserDetailsService userDetailsService;
+	
+	@Value("${rememberMe.privateKey}")
+	public void setRememberMeKey(String rememberMeKey) {
+		this.rememberMeKey = rememberMeKey;
+	}
+
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		log.info("Creating a password encoder");
+		log.info("The remember me key " + rememberMeKey);
 		return new BCryptPasswordEncoder();
 		
 	}
+	
 	
 	@Bean
     public RememberMeServices rememberMeServices() {
@@ -74,5 +82,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	    protected void configure(AuthenticationManagerBuilder authManagerBuilder) throws Exception {
 	        authManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	    }
+	    
 
 }

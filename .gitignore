@@ -26,3 +26,6 @@ bin/
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+# Igonre the application properties file
+application.properties
