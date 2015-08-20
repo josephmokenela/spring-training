@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import za.co.mmjmicrosystems.training.dto.UserEditForm;
+import za.co.mmjmicrosystems.training.entities.User;
 import za.co.mmjmicrosystems.training.services.UserService;
 import za.co.mmjmicrosystems.training.util.FlashUtils;
 
@@ -42,6 +44,18 @@ public class UserController {
 		model.addAttribute("user", userService.findOne(userId));
 		
 		return "user";
+	}
+	
+	@RequestMapping(value="/users/{userId}/edit")
+	public String edit(@PathVariable("userId") long userId, Model model) {
+		
+		User user = userService.findOne(userId);
+		UserEditForm userEditForm = new UserEditForm();
+		userEditForm.setName(user.getName());
+		userEditForm.setRoles(user.getRoles());
+		model.addAttribute(userEditForm);
+		
+		return "user-edit";
 	}
 
 }
