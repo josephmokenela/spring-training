@@ -17,8 +17,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.validation.BindingResult;
 
 import za.co.mmjmicrosystems.training.dto.ForgotPasswordForm;
+import za.co.mmjmicrosystems.training.dto.ResetPasswordForm;
 import za.co.mmjmicrosystems.training.dto.SignUpForm;
 import za.co.mmjmicrosystems.training.dto.UserDetailsImpl;
 import za.co.mmjmicrosystems.training.entities.User;
@@ -56,7 +58,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		final User user = new User();
 		user.setEmail(signUpForm.getEmail());
 		user.setName(signUpForm.getName());
-		user.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+		user.setPassword(passwordEncoder.encode(signUpForm.getPassword().trim()));
 		user.getRoles().add(Role.UNVERIFIED);
 		user.setVerificationCode(RandomStringUtils.randomAlphanumeric(16));
 		userRepository.save(user);
@@ -135,6 +137,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		String forgotPasswordLink = FlashUtils.hostUrl() + "/reset-password/" + user.getForgotPasswordCode();
 		mailSender.send(user.getEmail(), FlashUtils.getMessage("forgotPasswordSubject"), 
 				FlashUtils.getMessage("forgotPasswordEmail",forgotPasswordLink));
+	}
+
+
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
+	public void resetPassword(String forgotPasswordCode,
+			ResetPasswordForm resetPasswordForm, BindingResult result) {
+		
+		final User user = userRepository.findByForgotPasswordCode(forgotPasswordCode);
+		if (user == null)
+			result.reject("invalidForgotPassword");
+		
+		if (result.hasErrors())
+			return;
+		
+		user.setForgotPasswordCode(null);
+		user.setPassword(passwordEncoder.encode(resetPasswordForm.getPassword().trim()));
+		userRepository.save(user);
 	}
 
 }

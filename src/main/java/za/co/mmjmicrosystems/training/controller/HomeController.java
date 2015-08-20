@@ -1,5 +1,6 @@
 package za.co.mmjmicrosystems.training.controller;
 
+import javax.servlet.ServletException;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
@@ -11,15 +12,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import za.co.mmjmicrosystems.training.dto.ForgotPasswordForm;
+import za.co.mmjmicrosystems.training.dto.ResetPasswordForm;
 import za.co.mmjmicrosystems.training.dto.SignUpForm;
 import za.co.mmjmicrosystems.training.services.UserService;
 import za.co.mmjmicrosystems.training.util.FlashUtils;
 import za.co.mmjmicrosystems.training.validators.ForgotPasswordFormValidator;
+import za.co.mmjmicrosystems.training.validators.ResetPasswordValidator;
 import za.co.mmjmicrosystems.training.validators.SignupFormValidator;
 
 
@@ -31,13 +35,15 @@ public class HomeController {
 	private UserService userService;
 	private SignupFormValidator signupFormValidator;
 	private ForgotPasswordFormValidator forgotPasswordFormValidator;
+	private ResetPasswordValidator resetPasswordValidator;
 	
 	@Autowired
 	public HomeController(UserService userService, SignupFormValidator signupFormValidator,
-			ForgotPasswordFormValidator forgotPasswordFormValidator) {
+			ForgotPasswordFormValidator forgotPasswordFormValidator, ResetPasswordValidator resetPasswordValidator) {
 		this.userService = userService;
 		this.signupFormValidator = signupFormValidator;
 		this.forgotPasswordFormValidator = forgotPasswordFormValidator;
+		this.resetPasswordValidator = resetPasswordValidator;
 	}
 	
 	@InitBinder("signupform")
@@ -48,6 +54,11 @@ public class HomeController {
 	@InitBinder("forgotPasswordForm")
 	protected void initForgotPasswordBinder(WebDataBinder binder) {
 		binder.setValidator(forgotPasswordFormValidator);
+	}
+	
+	@InitBinder("resetPasswordForm")
+	protected void initResetPasswordBinder(WebDataBinder binder) {
+		binder.setValidator(resetPasswordValidator);
 	}
 	
 
@@ -101,6 +112,28 @@ public class HomeController {
 		FlashUtils.flash(redirectAttributes, "info", "checkMailResetPassword");
 		
 		return "redirect:/";
+	}
+	
+	@RequestMapping(value="/reset-password/{forgotPasswordCode}")
+	public String resetPassword(@PathVariable("forgotPasswordCode") String forgotPasswordCode, Model model) {
+		
+		model.addAttribute(new ResetPasswordForm());
+		return "reset-password";
+	}
+	
+	@RequestMapping(value="/reset-password/{forgotPasswordCode}", method=RequestMethod.POST)
+	public String resetPassword(@PathVariable("forgotPasswordCode") String forgotPasswordCode, 
+			@ModelAttribute("resetPasswordForm") @Valid ResetPasswordForm resetPasswordForm, 
+			BindingResult result, RedirectAttributes redirectAttrributes) {
+		
+		userService.resetPassword(forgotPasswordCode, resetPasswordForm, result);
+		
+		if (result.hasErrors())
+			return "reset-password";
+		
+		FlashUtils.flash(redirectAttrributes, "success", "passwordChanged");
+		
+		return "redirect:/login";
 	}
 
 }
