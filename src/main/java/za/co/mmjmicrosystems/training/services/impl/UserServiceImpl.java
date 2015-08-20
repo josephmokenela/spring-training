@@ -23,6 +23,7 @@ import za.co.mmjmicrosystems.training.dto.ForgotPasswordForm;
 import za.co.mmjmicrosystems.training.dto.ResetPasswordForm;
 import za.co.mmjmicrosystems.training.dto.SignUpForm;
 import za.co.mmjmicrosystems.training.dto.UserDetailsImpl;
+import za.co.mmjmicrosystems.training.dto.UserEditForm;
 import za.co.mmjmicrosystems.training.entities.User;
 import za.co.mmjmicrosystems.training.entities.User.Role;
 import za.co.mmjmicrosystems.training.mail.MailSender;
@@ -171,6 +172,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setEmail("Confidential");
 		
 		return user;
+	}
+
+
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
+	public void update(long userId, UserEditForm userEditForm) {
+		
+		User loggedIn = FlashUtils.getSessionUser();
+		FlashUtils.validate(loggedIn.isAdmin() || loggedIn.getId() == userId, "noPermissions");
+		User user = userRepository.findOne(userId);
+		user.setName(userEditForm.getName());
+		
+		if (loggedIn.isAdmin())
+			user.setRoles(userEditForm.getRoles());
+		
+		userRepository.save(user);
+		
 	}
 
 }

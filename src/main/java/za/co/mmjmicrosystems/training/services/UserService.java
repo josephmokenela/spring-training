@@ -5,6 +5,7 @@ import org.springframework.validation.BindingResult;
 import za.co.mmjmicrosystems.training.dto.ForgotPasswordForm;
 import za.co.mmjmicrosystems.training.dto.ResetPasswordForm;
 import za.co.mmjmicrosystems.training.dto.SignUpForm;
+import za.co.mmjmicrosystems.training.dto.UserEditForm;
 import za.co.mmjmicrosystems.training.entities.User;
 
 
@@ -20,6 +21,8 @@ public interface UserService {
 			ResetPasswordForm resetPasswordForm, BindingResult result);
 
 	public User findOne(long userId);
+
+	public void update(long userId, UserEditForm userEditForm);
 
 }
 
