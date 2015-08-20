@@ -158,4 +158,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		userRepository.save(user);
 	}
 
+
+
+	@Override
+	public User findOne(long userId) {
+		
+		User loggedIn = FlashUtils.getSessionUser();
+		User user = userRepository.findOne(userId);
+		
+		if (loggedIn == null || loggedIn.getId() != user.getId() && !loggedIn.isAdmin())
+			//hide the email id
+			user.setEmail("Confidential");
+		
+		return user;
+	}
+
 }

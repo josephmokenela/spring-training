@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import za.co.mmjmicrosystems.training.util.FlashUtils;
+
 @Entity
 @Table(name="usr", indexes = {
 		@Index(columnList = "email", unique = true)
@@ -106,7 +108,19 @@ public class User {
 	public void setForgotPasswordCode(String forgotPasswordCode) {
 		this.forgotPasswordCode = forgotPasswordCode;
 	}
+
+	public boolean isAdmin() {
+		return roles.contains(Role.ADMIN);
+	}
 	
-	
+	public boolean isEditable() {
+		
+		User loggedIn = FlashUtils.getSessionUser();
+		
+		if (loggedIn == null)
+			return false;
+		
+		return loggedIn.isAdmin() || loggedIn.getId() == id;
+	}
 
 }
