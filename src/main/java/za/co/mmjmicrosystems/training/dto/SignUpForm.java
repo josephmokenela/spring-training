@@ -4,11 +4,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import za.co.mmjmicrosystems.training.entities.User;
+
 public class SignUpForm {
 	
 	@NotNull
 	@Size(min=1, max=255)
-	@Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "{emailPatternError}")
+	@Pattern(regexp = User.EMAIL_PATTERN, message = "{emailPatternError}")
 	private String email;
 	
 	@NotNull

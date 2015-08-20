@@ -21,6 +21,8 @@ public class User {
 	
 	public static final int EMAIL_MAX = 250;
 	public static final int NAME_MAX = 50;
+	public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	public static final int RANDOM_CODE_LENGTH = 16;
 	
 	public static enum Role {
 		UNVERIFIED, BLOCKED, ADMIN
@@ -42,8 +44,11 @@ public class User {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<Role> roles = new HashSet<Role>();	
 	
-	@Column(length = 16)
+	@Column(length = User.RANDOM_CODE_LENGTH)
 	private String verificationCode;
+	
+	@Column(length = User.RANDOM_CODE_LENGTH)
+	private String forgotPasswordCode;
 	
 	public Long getId() {
 		return id;
@@ -91,6 +96,14 @@ public class User {
 
 	public void setVerificationCode(String verificationCode) {
 		this.verificationCode = verificationCode;
+	}
+
+	public String getForgotPasswordCode() {
+		return forgotPasswordCode;
+	}
+
+	public void setForgotPasswordCode(String forgotPasswordCode) {
+		this.forgotPasswordCode = forgotPasswordCode;
 	}
 	
 	

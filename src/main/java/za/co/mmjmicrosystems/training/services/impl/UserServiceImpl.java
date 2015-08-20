@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import za.co.mmjmicrosystems.training.dto.ForgotPasswordForm;
 import za.co.mmjmicrosystems.training.dto.SignUpForm;
 import za.co.mmjmicrosystems.training.dto.UserDetailsImpl;
 import za.co.mmjmicrosystems.training.entities.User;
@@ -102,6 +103,38 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.getRoles().remove(Role.UNVERIFIED);
 		user.setVerificationCode(null);
 		userRepository.save(user);
+	}
+
+
+
+	@Override
+	public void forgotPassword(ForgotPasswordForm forgotPasswordForm) {
+		
+		final User user = userRepository.findByEmail(forgotPasswordForm.getEmail());
+		final String forgotPasswordCode = RandomStringUtils.randomAlphanumeric(User.RANDOM_CODE_LENGTH);
+		
+		user.setForgotPasswordCode(forgotPasswordCode);
+		final User savedUser = userRepository.save(user);
+		
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+			
+			@Override
+			public void afterCommit() {
+				try {
+					mailForgotPasswordLink(savedUser);
+				} catch(MessagingException ex) {
+					logger.error(ExceptionUtils.getStackTrace(ex));
+				}
+			}
+		});
+		
+	}
+	
+	private void mailForgotPasswordLink(User user) throws MessagingException {
+		
+		String forgotPasswordLink = FlashUtils.hostUrl() + "/reset-password/" + user.getForgotPasswordCode();
+		mailSender.send(user.getEmail(), FlashUtils.getMessage("forgotPasswordSubject"), 
+				FlashUtils.getMessage("forgotPasswordEmail",forgotPasswordLink));
 	}
 
 }
