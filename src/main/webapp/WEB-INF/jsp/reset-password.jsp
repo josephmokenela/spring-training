@@ -15,14 +15,14 @@
     			
     			<div class="form-group">
     				<form:label path="password">Password</form:label>
-    				<form:input path="password" type="password" class="form-control" placeholder="Please enter your password"/>
+    				<form:password path="password"  class="form-control" placeholder="Please enter your password"/>
     				<form:errors cssClass="error" path="password" />
     				<p class="help-block">Please enter your Password</p>
     			</div>
     			
     			<div class="form-group">
     				<form:label path="retypePassword">Retype Password</form:label>
-    				<form:input path="retypePassword" type="password" class="form-control" placeholder="Please retype your password"/>
+    				<form:password path="retypePassword"  class="form-control" placeholder="Please retype your password"/>
     				<form:errors cssClass="error" path="retypePassword" />
     				<p class="help-block">Please retype your password to confirm</p>
     			</div>

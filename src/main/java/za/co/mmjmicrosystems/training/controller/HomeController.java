@@ -1,6 +1,5 @@
 package za.co.mmjmicrosystems.training.controller;
 
-import javax.servlet.ServletException;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
